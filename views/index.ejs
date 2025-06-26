@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+    <h1 style="color: #4e9cff;">Welcome, <%= user.username %> 👋</h1>
+    <div style="display: flex; gap: 10px;">
+      <a href="/assigned-tasks" class="btn" style="background-color: #4caf50;">📋 View Assigned Tasks</a>
+      <a href="/logout" class="btn" style="background-color: #3b4cca;">Logout</a>
+      <a href="/notifications" class="btn">🔔 Notifications</a>
+
+    </div>
+  </header>
+
+  <section style="max-width: 800px; margin: auto; padding: 20px; background: #1e1e1e; border-radius: 10px;">
+    <h2 style="color: #81c784;">Your Projects</h2>
+
+    <% if (projects.length === 0) { %>
+      <p>No projects created yet.</p>
+    <% } else { %>
+      <ul style="list-style: none; padding: 0;">
+        <% projects.forEach(project => { %>
+          <li style="background: #2c2c44; margin-bottom: 15px; padding: 15px; border-radius: 8px;">
+            <strong style="font-size: 1.2em;"><%= project.title %></strong><br/>
+            <span><%= project.description %></span><br/><br/>
+
+            <a href="/projects/<%= project._id %>" class="btn" style="background-color: #64b5f6;">📂 View</a>
+
+            <form action="/projects/<%= project._id %>?_method=DELETE" method="POST" style="display:inline;">
+              <button type="submit" class="btn" style="background-color: #e53935;">🗑 Delete</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <a href="/projects/new" class="btn" style="margin-top: 20px; background-color: #43a047;">+ Create New Project</a>
+  </section>
+</body>
+</html>

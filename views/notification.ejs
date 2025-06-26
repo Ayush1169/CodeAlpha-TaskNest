@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notifications</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>🔔 Notifications</h2>
+    <% if (notification.length === 0) { %>
+      <p>No notifications yet.</p>
+    <% } else { %>
+      <ul>
+        <% notification.forEach(n => { %>
+          <li style= <%= n.isRead ? '' : 'font-weight: bold;' %> >
+            <%= n.message %> — 
+            <a href="<%= n.link %>">View</a>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+    <a href="/" class="back">← Back to Dashboard</a>
+  </div>
+</body>
+</html>

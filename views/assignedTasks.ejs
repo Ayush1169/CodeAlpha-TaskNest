@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assigned Tasks</title>
+  <link rel="stylesheet" href="../stylesheets/style.css">
+</head>
+<body>
+  <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+    <h1 style="color: #4e9cff;">📋 Assigned Tasks for <%= user.username %></h1>
+    <a href="/" class="btn" style="background-color: #43a047;">← Back to Dashboard</a>
+  </header>
+
+  <section style="max-width: 900px; margin: auto; padding: 20px; background: #1e1e1e; border-radius: 10px;">
+    <% if (tasks.length === 0) { %>
+      <p>You don’t have any tasks assigned yet.</p>
+    <% } else { %>
+      <ul style="list-style: none; padding: 0;">
+        <% tasks.forEach(task => { %>
+          <li style="background: #2c2c44; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+            <h3><%= task.title %> 🛠</h3>
+            <p><%= task.description %></p>
+            <p>Status: <strong><%= task.status %></strong></p>
+            <p>Project: <strong><%= task.project ? task.project.title : 'Deleted Project' %></strong></p>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+</body>
+</html>

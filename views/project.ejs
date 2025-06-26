@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= project ? project.title : "Create Project" %></title>
+  <link rel="stylesheet" href="/stylesheets/project.css">
+</head>
+<body>
+  <section class="form-container">
+    <% if (project) { %>
+      <h2><%= project.title %></h2>
+      <p><%= project.description %></p>
+      <a href="/" class="back">← Back to Dashboard</a>
+
+      <div class="task-columns">
+        <% ['To Do', 'In progress', 'Done'].forEach(status => { %>
+          <div class="column">
+            <h3><%= status %></h3>
+            <% tasks
+              .filter(task => task.status === status)
+              .forEach(task => { %>
+              <div class="task-card">
+                <h4><%= task.title %></h4>
+                <p><%= task.description %></p>
+
+                <% if (task.assignedTo) { %>
+                  <p class="assigned">👤 Assigned to: <%= task.assignedTo.username %></p>
+                <% } else { %>
+                  <p class="assigned">👤 Not assigned</p>
+                <% } %>
+
+                <div class="comments">
+                  <h5>💬 Comments</h5>
+                  <% comments.filter(c => c.task.equals(task._id)).forEach(comment => { %>
+                    <div class="comment">
+                      <% if (comment.author) { %>
+                        <strong><%= comment.author.username %>:</strong> <%= comment.text %>
+                      <% } else { %>
+                        <strong>Unknown:</strong> <%= comment.text %>
+                      <% } %>
+                    </div>
+                  <% }) %>
+
+                  <form action="/tasks/<%= task._id %>/comments" method="POST" class="comment-form">
+                    <input type="text" name="text" placeholder="Add a comment..." required />
+                    <button type="submit">Post</button>
+                  </form>
+                </div>
+
+                <% if (task.createdBy && task.createdBy.equals(user._id)) { %>
+                  <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" class="delete-form">
+                    <button type="submit" class="delete-btn">🗑 Delete Task</button>
+                  </form>
+                <% } %>
+              </div>
+            <% }) %>
+          </div>
+        <% }) %>
+      </div>
+
+      <form action="/projects/<%= project._id %>/tasks" method="POST" class="task-form">
+        <h3>Add New Task</h3>
+        <input type="text" name="title" placeholder="Task Title" required />
+        <textarea name="description" placeholder="Task Description" required></textarea>
+
+        <select name="status" required>
+          <option value="To Do">To Do</option>
+          <option value="In progress">In progress</option>
+          <option value="Done">Done</option>
+        </select>
+
+        <select name="assignedTo">
+          <option disabled selected>Assign to user</option>
+          <% users.forEach(userOption => { %>
+            <option value="<%= userOption._id %>"><%= userOption.username %></option>
+          <% }) %>
+        </select>
+
+        <button type="submit">Add Task</button>
+      </form>
+
+    <% } else { %>
+      <h2>Create New Project</h2>
+      <form action="/projects" method="POST" class="project-form">
+        <label>Project Title</label>
+        <input type="text" name="title" placeholder="Project Title" required />
+
+        <label>Project Description</label>
+        <textarea name="description" rows="5" placeholder="Project Description" required></textarea>
+
+        <label>Select Members (hold Ctrl/Cmd for multiple)</label>
+        <select name="members" multiple required>
+          <% users.forEach(userOption => { %>
+            <option value="<%= userOption._id %>"><%= userOption.username %></option>
+          <% }) %>
+        </select>
+
+        <button type="submit">Create</button>
+      </form>
+      <a href="/" class="back">← Back to Dashboard</a>
+    <% } %>
+  </section>
+</body>
+</html>
